@@ -628,8 +628,13 @@ def main(callback=None):
                       "timeout": timeout, "limit": limit}
     report_json["tool"]["scan_arguments"] = scan_arguments
 
-    scan(regex_config, controller, scan_arguments)
-    _save_report(report_format)
+    try:
+        scan(regex_config, controller, scan_arguments)
+    except KeyboardInterrupt:
+        log_message("Keyboard interrupt detected. Saving findings and exiting...")
+        sys.exit(130)
+    finally:
+        _save_report(report_format)
 
     log_message("Done!")
 
